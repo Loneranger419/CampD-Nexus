@@ -115,24 +115,28 @@ const pagefindAssets = withBase('/pagefind/');
 		const dialog = document.getElementById('campd-search');
 		const openers = document.querySelectorAll('[data-search-open]');
 		const closeButton = dialog?.querySelector('[data-search-close]');
-		let pagefindLoaded = false;
+	let pagefindModule: { default?: any } | null = null;
 		let pagefindReady = false;
 
 		const loadPagefind = async () => {
-			if (pagefindLoaded) return;
-			pagefindLoaded = true;
-			try {
-				await import(pagefindScriptUrl);
-			} catch (error) {
-				console.error('Failed to load search assets', error);
-			}
+		if (pagefindModule) return pagefindModule;
+		try {
+			pagefindModule = await import(pagefindScriptUrl);
+		} catch (error) {
+			console.error('Failed to load search assets', error);
+			pagefindModule = null;
+		}
+		return pagefindModule;
 		};
 
 		const initPagefind = async () => {
 			if (pagefindReady) return;
-			await loadPagefind();
-			if (window.PagefindUI) {
-				new window.PagefindUI({
+		const module = await loadPagefind();
+		const PagefindUI =
+			(module && (module.default || module.PagefindUI)) ||
+			(window && (window as any).PagefindUI);
+		if (typeof PagefindUI === 'function') {
+			new PagefindUI({
 					element: '#pagefind-search',
 					showImages: pagefindOptions.showImages,
 					baseUrl: pagefindOptions.baseUrl
