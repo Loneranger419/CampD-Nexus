@@ -108,45 +108,93 @@ const pagefindAssets = withBase('/pagefind/');
 <script>
 	const pagefindOptions = {
 		showImages: false,
-		baseUrl: "${pagefindAssets}"
+		baseUrl: "${pagefindAssets}",
+		bundlePath: "${pagefindAssets}"
 	};
 	const pagefindScriptUrl = "${pagefindScript}";
+
 	(() => {
 		const dialog = document.getElementById('campd-search');
 		const openers = document.querySelectorAll('[data-search-open]');
 		const closeButton = dialog?.querySelector('[data-search-close]');
-	let pagefindModule: { default?: any } | null = null;
+
+		let pagefindScriptPromise = null;
+		let pagefindInstance = null;
 		let pagefindReady = false;
 
-		const loadPagefind = async () => {
-		if (pagefindModule) return pagefindModule;
-		try {
-			pagefindModule = await import(pagefindScriptUrl);
-		} catch (error) {
-			console.error('Failed to load search assets', error);
-			pagefindModule = null;
-		}
-		return pagefindModule;
+		const loadPagefindScript = () => {
+			if (pagefindScriptPromise) return pagefindScriptPromise;
+
+			pagefindScriptPromise = new Promise((resolve) => {
+				const existing = document.querySelector('script[data-pagefind-ui]');
+				if (existing) {
+					if (existing.dataset.loaded === 'true') {
+						resolve(true);
+						return;
+					}
+					existing.addEventListener('load', () => resolve(true), { once: true });
+					existing.addEventListener('error', () => resolve(false), { once: true });
+					return;
+				}
+
+				const script = document.createElement('script');
+				script.type = 'module';
+				script.src = pagefindScriptUrl;
+				script.dataset.pagefindUi = 'true';
+				script.addEventListener('load', () => {
+					script.dataset.loaded = 'true';
+					resolve(true);
+				});
+				script.addEventListener('error', (error) => {
+					console.error('Failed to load Pagefind UI script', error);
+					resolve(false);
+				});
+				document.head.appendChild(script);
+			});
+
+			return pagefindScriptPromise;
 		};
 
-		const initPagefind = async () => {
-			if (pagefindReady) return;
-		const module = await loadPagefind();
-		const PagefindUI =
-			(module && (module.default || module.PagefindUI)) ||
-			(window && (window as any).PagefindUI);
-		if (typeof PagefindUI === 'function') {
-			new PagefindUI({
-					element: '#pagefind-search',
-					showImages: pagefindOptions.showImages,
-					baseUrl: pagefindOptions.baseUrl
-				});
-				pagefindReady = true;
+		const ensurePagefindReady = async () => {
+			if (pagefindReady) return true;
+
+			const loaded = await loadPagefindScript();
+			if (!loaded) {
+				return false;
 			}
+
+			const PagefindUIClass = window?.PagefindUI;
+			if (typeof PagefindUIClass !== 'function') {
+				console.error('Pagefind UI script loaded but window.PagefindUI is unavailable');
+				return false;
+			}
+
+			const container = document.querySelector('#pagefind-search');
+			if (!container) {
+				console.error('Search container #pagefind-search not found');
+				return false;
+			}
+
+			if (!pagefindInstance) {
+				pagefindInstance = new PagefindUIClass({
+					element: container,
+					showImages: pagefindOptions.showImages,
+					baseUrl: pagefindOptions.baseUrl,
+					bundlePath: pagefindOptions.bundlePath,
+					resetStyles: false
+				});
+			}
+
+			pagefindReady = true;
+			return true;
 		};
 
 		const openDialog = async () => {
-			await initPagefind();
+			const ready = await ensurePagefindReady();
+			if (!ready) {
+				return;
+			}
+
 			dialog?.showModal();
 			requestAnimationFrame(() => {
 				const input = dialog?.querySelector('input');
