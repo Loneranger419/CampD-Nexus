@@ -54,6 +54,7 @@ The current content is seeded with representative placeholders so every navigati
 - `src/content/wiki/<slug>.md` for group knowledge entries; nest folders (e.g., `wiki/ops/field-guide.md`) to mirror hierarchy.
 - `src/content/blog/<year>/<slug>.md` for blog posts with frontmatter (`title`, `summary`, `author`, `published`, optional `heroImage`).
 - Blog detail pages render through `src/pages/blog/[year]/[slug].astro`, so keep blog entries organized by year folders.
+- GitHub Pages deploys under `https://loneranger419.github.io/CampD-Nexus/`, so `astro.config.mjs` sets `site` and `base` accordingly; update these if the repository or custom domain changes.
 - `src/content/guides/<slug>.md` for detailed mod guides, including `game`, `version`, and `tags`.
 - `src/content/modLists/<game>.json` for structured mod lists (mods, maintainers, resources) consumed by guides and dashboards.
 - `src/content/tiles/*.json` for landing-page tiles; each file holds title, description, URL, tag, icon, and display order.
