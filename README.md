@@ -47,6 +47,7 @@ The current content is seeded with representative placeholders so every navigati
 - Preview production build: `npm run preview`
 - Deployment target: GitHub Pages via workflow pushing contents of `dist/`
 - Current wiki, blog, games, and repositories pages render seeded placeholders—swap the content files as collections expand.
+- GitHub Pages: `.github/workflows/deploy.yml` builds on every push to `main` and deploys via Actions; after the first successful run, enable Pages in repository settings (source: GitHub Actions) and optionally wire the custom Cloudflare domain.
 
 ## Content Organization & Workflow
 - `src/content/wiki/<slug>.md` for group knowledge entries; nest folders (e.g., `wiki/ops/field-guide.md`) to mirror hierarchy.

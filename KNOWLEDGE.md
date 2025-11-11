@@ -6,4 +6,5 @@
 - Astro project scaffolded with Tailwind integration, base layout, header/footer, and theming utilities.
 - Seeded `src/content` collections (wiki, blog, guides, modLists, tiles) and wired homepage cards/feeds to live data.
 - Added wiki/blog/game repo pages & dynamic routes with placeholder copy; PLAN now focuses on search, CMS, content expansion, deployment, contributions, and polish.
+- Added GitHub Actions workflow (`.github/workflows/deploy.yml`) and README note for GitHub Pages deployment flow.
 
