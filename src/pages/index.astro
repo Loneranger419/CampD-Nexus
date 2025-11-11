@@ -2,20 +2,21 @@
 
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import { withBase } from '../utils/paths';
 import { getCollection } from 'astro:content';
 
 const navItems = [
-	{ href: '/wiki', label: 'Wiki' },
-	{ href: '/games', label: 'Games' },
-	{ href: '/blog', label: 'Blog' },
-	{ href: '/repos', label: 'Repositories' },
+	{ href: withBase('/wiki'), label: 'Wiki' },
+	{ href: withBase('/games'), label: 'Games' },
+	{ href: withBase('/blog'), label: 'Blog' },
+	{ href: withBase('/repos'), label: 'Repositories' },
 ];
 
 const tileEntries = await getCollection('tiles');
 const spotlightTiles = tileEntries
 	.sort((a, b) => a.data.order - b.data.order)
 	.slice(0, 3)
-	.map((entry) => entry.data);
+	.map((entry) => ({ ...entry.data, href: withBase(entry.data.href) }));
 
 const wikiEntries = await getCollection('wiki');
 const featuredWiki = wikiEntries
@@ -37,8 +38,6 @@ const latestModList = modLists.sort(
 	(a, b) => b.data.updated.getTime() - a.data.updated.getTime(),
 )[0];
 ---
----
-
 <SiteLayout
 	title="CampD Nexus"
 	description="CampD Nexus is the launchpad for our modded adventures, guides, and shared knowledge base."
@@ -56,13 +55,13 @@ const latestModList = modLists.sort(
 			</p>
 		</div>
 		<div class="flex flex-wrap items-center justify-center gap-3">
-			<a class="btn" href="/games">
+			<a class="btn" href={withBase('/games')}>
 				View Mod Guides
 				<svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
 					<path fill="currentColor" d="m13.6 5.2l5.6 5.6l-5.6 5.6l-1.2-1.2l3.4-3.4H6v-1.6h9.8L12.4 6.4z" />
 				</svg>
 			</a>
-			<a class="btn-secondary" href={Astro.resolve('/wiki')}>Browse the Wiki</a>
+			<a class="btn-secondary" href={withBase('/wiki')}>Browse the Wiki</a>
 		</div>
 	</section>
 
@@ -95,7 +94,7 @@ const latestModList = modLists.sort(
 			<ul class="space-y-4">
 				{featuredWiki.map((entry) => (
 					<li class="rounded-2xl border border-border/40 bg-surface/70 p-4 transition hover:border-accent/60">
-						<a class="flex flex-col gap-1" href={`/wiki/${entry.slug}`}>
+						<a class="flex flex-col gap-1" href={withBase(`/wiki/${entry.slug}`)}>
 							<span class="text-sm font-semibold text-accent">
 								{entry.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
 							</span>
@@ -114,7 +113,7 @@ const latestModList = modLists.sort(
 				</p>
 			</div>
 			{latestBlog.map((post) => (
-				<a class="block rounded-2xl border border-border/40 bg-surface/80 p-4 hover:border-accent/60" href={`/blog/${post.slug}`}>
+				<a class="block rounded-2xl border border-border/40 bg-surface/80 p-4 hover:border-accent/60" href={withBase(`/blog/${post.slug}`)}>
 					<span class="text-xs font-semibold uppercase tracking-wide text-accent">Blog</span>
 					<h3 class="mt-1 text-lg font-semibold text-foreground">{post.data.title}</h3>
 					<p class="prose-muted mt-1 text-sm">{post.data.summary}</p>
@@ -125,7 +124,10 @@ const latestModList = modLists.sort(
 				</a>
 			))}
 			{featuredGuide.map((guide) => (
-				<a class="block rounded-2xl border border-border/40 bg-surface/80 p-4 hover:border-accent/60" href={`/games/${guide.data.game.toLowerCase()}/guides/${guide.slug}`}>
+				<a
+					class="block rounded-2xl border border-border/40 bg-surface/80 p-4 hover:border-accent/60"
+					href={withBase(`/games/${guide.data.game.toLowerCase()}/guides/${guide.slug}`)}
+				>
 					<span class="text-xs font-semibold uppercase tracking-wide text-accent">Mod Guide</span>
 					<h3 class="mt-1 text-lg font-semibold text-foreground">{guide.data.title}</h3>
 					<p class="prose-muted mt-1 text-sm">{guide.data.summary}</p>
@@ -154,7 +156,10 @@ const latestModList = modLists.sort(
 							</li>
 						))}
 					</ul>
-					<a class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-accent" href={`/games/${latestModList.data.game.toLowerCase()}`}>
+					<a
+						class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-accent"
+						href={withBase(`/games/${latestModList.data.game.toLowerCase()}`)}
+					>
 						View full list
 						<svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
 							<path fill="currentColor" d="m13.6 5.2l5.6 5.6l-5.6 5.6l-1.2-1.2l3.4-3.4H6v-1.6h9.8L12.4 6.4z" />

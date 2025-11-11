@@ -3,6 +3,7 @@ import SiteLayout from '../../../../layouts/SiteLayout.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { slugify } from '../../../../utils/slugify';
+import { withBase } from '../../../../utils/paths';
 
 export async function getStaticPaths() {
 	const guides = await getCollection('guides');
@@ -44,7 +45,7 @@ const { Content } = await guide.render();
 		<Content />
 	</article>
 	<footer class="mt-10 flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
-		<a class="btn-secondary" href={`/games/${Astro.params.game}`}>← Back to game hub</a>
+		<a class="btn-secondary" href={withBase(`/games/${Astro.params.game}`)}>← Back to game hub</a>
 		<p>Guide still evolving? Submit PRs with testing notes or open a discussion in the CampD Discord.</p>
 	</footer>
 </SiteLayout>

@@ -2,6 +2,7 @@
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import '../styles/global.css';
+import { withBase } from '../utils/paths';
 
 type Props = {
 	title?: string;
@@ -23,7 +24,7 @@ const { title = 'CampD Nexus', description = 'CampD hubs, guides, and community 
 		{description && <meta property="og:description" content={description} />}
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.site?.href ?? 'https://example.com'} />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
 		<script is:inline>
 			(() => {
 				const storageKey = 'campd-theme';

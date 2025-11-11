@@ -2,6 +2,7 @@
 import SiteLayout from '../../../layouts/SiteLayout.astro';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
+import { withBase } from '../../../utils/paths';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
@@ -49,7 +50,7 @@ const publishedLabel = post.data.published.toLocaleDateString(undefined, {
 		<Content />
 	</article>
 	<footer class="mt-10 flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
-		<a class="btn-secondary" href="/blog">← Back to all posts</a>
+		<a class="btn-secondary" href={withBase('/blog')}>← Back to all posts</a>
 		<p>Spotted a correction? Submit an edit via CMS or open a pull request.</p>
 	</footer>
 </SiteLayout>

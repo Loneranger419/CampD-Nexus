@@ -3,6 +3,7 @@ import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { slugify } from '../../../utils/slugify';
+import { withBase } from '../../../utils/paths';
 
 type ModListEntry = CollectionEntry<'modLists'>;
 type GuideEntry = CollectionEntry<'guides'>;
@@ -108,7 +109,10 @@ const { modList, guides } = Astro.props as {
 						<ul class="space-y-2 text-sm text-muted">
 							{guides.map((guide) => (
 								<li class="rounded-xl border border-border/30 bg-background/70 px-3 py-2">
-									<a class="flex flex-col gap-1 text-foreground" href={`/games/${Astro.params.game}/guides/${guide.slug}`}>
+									<a
+										class="flex flex-col gap-1 text-foreground"
+										href={withBase(`/games/${Astro.params.game}/guides/${guide.slug}`)}
+									>
 										<span class="font-semibold">{guide.data.title}</span>
 										<span>
 											Updated{' '}

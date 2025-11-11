@@ -1,15 +1,24 @@
 ---
+import { withBase } from '../utils/paths';
+
 const year = new Date().getFullYear();
+const footerLinks = [
+	{ href: withBase('/about'), label: 'About' },
+	{ href: withBase('/wiki'), label: 'Wiki' },
+	{ href: withBase('/blog'), label: 'Blog' },
+	{ href: withBase('/contact'), label: 'Contact' },
+];
 ---
 
 <footer class="mt-16 border-t border-border/40 bg-surface/60 backdrop-blur-sm">
 	<div class="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
 		<p>&copy; {year} CampD Collective. All rights reserved.</p>
 		<div class="flex flex-wrap items-center gap-4">
-			<a class="hover:text-foreground transition-colors" href="/about">About</a>
-			<a class="hover:text-foreground transition-colors" href="/wiki">Wiki</a>
-			<a class="hover:text-foreground transition-colors" href="/blog">Blog</a>
-			<a class="hover:text-foreground transition-colors" href="/contact">Contact</a>
+			{footerLinks.map((link) => (
+				<a class="hover:text-foreground transition-colors" href={link.href}>
+					{link.label}
+				</a>
+			))}
 		</div>
 	</div>
 </footer>
