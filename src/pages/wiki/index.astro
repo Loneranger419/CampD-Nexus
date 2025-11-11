@@ -1,0 +1,48 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+
+const entries = await getCollection('wiki');
+const sortedEntries = entries.sort(
+	(a, b) => b.data.updated.getTime() - a.data.updated.getTime(),
+);
+---
+
+<SiteLayout title="CampD Wiki" description="Shared knowledge and operations intel for the CampD collective.">
+	<section class="space-y-6">
+		<div class="flex flex-col gap-2">
+			<h1 class="text-3xl font-semibold text-foreground">CampD Wiki</h1>
+			<p class="prose-muted text-base leading-relaxed">
+				Reference docs, event procedures, and onboarding notes. Everything here is version-controlled, so feel
+				free to propose edits via CMS or pull request.
+			</p>
+		</div>
+		<div class="grid gap-4 md:grid-cols-2">
+			{sortedEntries.map((entry) => (
+				<a class="card flex h-full flex-col justify-between" href={`/wiki/${entry.slug}`}>
+					<div class="space-y-3">
+						<span class="text-sm font-semibold uppercase tracking-wide text-accent">
+							{entry.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+						</span>
+						<h2 class="text-xl font-semibold text-foreground">{entry.data.title}</h2>
+						<p class="prose-muted text-sm leading-relaxed">{entry.data.summary}</p>
+					</div>
+					<ul class="mt-4 flex flex-wrap gap-2 text-xs text-muted">
+						{entry.data.tags.map((tag) => (
+							<li class="rounded-full bg-accent/10 px-3 py-1 font-semibold uppercase tracking-wide text-accent">
+								{tag}
+							</li>
+						))}
+					</ul>
+				</a>
+			))}
+		</div>
+		<div class="card border-dashed border-accent/40 bg-background/40 text-sm text-muted">
+			<p>
+				Need a new page? Add a Markdown file under <code>src/content/wiki/</code> or use the CMS. Organize
+				longer sections by nesting directories, then link to them here.
+			</p>
+		</div>
+	</section>
+</SiteLayout>
+

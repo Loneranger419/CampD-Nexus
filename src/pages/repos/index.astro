@@ -1,0 +1,64 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+const featuredRepos = [
+	{
+		name: 'campd-nexus',
+		description: 'This website. Houses the Astro project, content collections, and deployment tooling.',
+		link: 'https://github.com/CampD/campd-nexus',
+		status: 'Active',
+	},
+	{
+		name: 'campd-mod-patches',
+		description: 'Shared compatibility patches and scripts that keep our mod lineups in sync.',
+		link: 'https://github.com/CampD/campd-mod-patches',
+		status: 'Maintained',
+	},
+	{
+		name: 'campd-assets',
+		description: 'Branding, icons, and shared media for announcements. Placeholder until assets are migrated.',
+		link: 'https://github.com/CampD/campd-assets',
+		status: 'Placeholder',
+	},
+];
+---
+
+<SiteLayout title="CampD Repositories" description="Quick links to shared codebases and asset libraries.">
+	<section class="space-y-6">
+		<header class="space-y-2">
+			<h1 class="text-3xl font-semibold text-foreground">Repositories</h1>
+			<p class="prose-muted text-base leading-relaxed">
+				Centralize our shared tooling. These repos cover the website, mod patches, and supporting asset packs.
+				Expect more structure once we formalize ownership and automation.
+			</p>
+		</header>
+		<div class="grid gap-6 md:grid-cols-2">
+			{featuredRepos.map((repo) => (
+				<article class="card flex h-full flex-col justify-between">
+					<div class="space-y-3">
+						<div class="flex items-center justify-between">
+							<h2 class="text-xl font-semibold text-foreground">{repo.name}</h2>
+							<span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
+								{repo.status}
+							</span>
+						</div>
+						<p class="prose-muted text-sm leading-relaxed">{repo.description}</p>
+					</div>
+					<a class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-accent" href={repo.link}>
+						View on GitHub
+						<svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+							<path fill="currentColor" d="m13.6 5.2 5.6 5.6-5.6 5.6-1.2-1.2 3.4-3.4H6v-1.6h9.8L12.4 6.4Z" />
+						</svg>
+					</a>
+				</article>
+			))}
+		</div>
+		<div class="card border-dashed border-accent/40 bg-background/40 text-sm text-muted">
+			<p>
+				This list is a placeholder. Once we finalize project ownership we’ll sync the actual repo URLs and add
+				status badges driven by GitHub Actions.
+			</p>
+		</div>
+	</section>
+</SiteLayout>
+

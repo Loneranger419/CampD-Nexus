@@ -1,0 +1,49 @@
+---
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/global.css';
+
+type Props = {
+	title?: string;
+	description?: string;
+	navItems?: Array<{ href: string; label: string }>;
+};
+
+const { title = 'CampD Nexus', description = 'CampD hubs, guides, and community intel.', navItems } =
+	Astro.props as Props;
+---
+
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		{description && <meta name="description" content={description} />}
+		<meta property="og:title" content={title} />
+		{description && <meta property="og:description" content={description} />}
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.site?.href ?? 'https://example.com'} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<script is:inline>
+			(() => {
+				const storageKey = 'campd-theme';
+				try {
+					const stored = localStorage.getItem(storageKey);
+					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					const theme = stored === 'light' || stored === 'dark' ? stored : prefersDark ? 'dark' : 'light';
+					document.documentElement.dataset.theme = theme;
+				} catch (error) {
+					console.warn('Theme detection failed', error);
+				}
+			})();
+		</script>
+	</head>
+	<body>
+		<SiteHeader navItems={navItems} />
+		<main class="page-shell">
+			<slot />
+		</main>
+		<SiteFooter />
+	</body>
+</html>
+

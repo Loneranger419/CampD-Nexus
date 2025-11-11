@@ -1,0 +1,9 @@
+{
+  "title": "CampD Field Guide",
+  "description": "Central knowledge base for roles, ops, and troubleshooting notes.",
+  "href": "/wiki",
+  "tag": "Wiki",
+  "icon": "tabler:book",
+  "order": 2
+}
+

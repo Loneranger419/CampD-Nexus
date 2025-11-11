@@ -1,0 +1,41 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort(
+	(a, b) => b.data.published.getTime() - a.data.published.getTime(),
+);
+---
+
+<SiteLayout title="CampD Blog" description="Updates, patch notes, and community highlights.">
+	<section class="space-y-6">
+		<header class="space-y-2">
+			<h1 class="text-3xl font-semibold text-foreground">Dispatches</h1>
+			<p class="prose-muted text-base leading-relaxed">
+				Read the latest about projects in motion, release planning, and lessons learned from recent events.
+			</p>
+		</header>
+		<div class="grid gap-6 lg:grid-cols-2">
+			{sortedPosts.map((post) => (
+				<a class="card flex h-full flex-col justify-between" href={`/blog/${post.slug}`}>
+					<div class="space-y-3">
+						<span class="text-sm font-semibold uppercase tracking-wide text-accent">
+							{post.data.published.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+						</span>
+						<h2 class="text-2xl font-semibold text-foreground">{post.data.title}</h2>
+						<p class="prose-muted text-sm leading-relaxed">{post.data.summary}</p>
+					</div>
+					<p class="mt-4 text-xs text-muted">By {post.data.author}</p>
+				</a>
+			))}
+		</div>
+		<div class="card border-dashed border-accent/40 bg-background/40 text-sm text-muted">
+			<p>
+				Planning a big update? Draft it under <code>src/content/blog/</code>, then open a pull request so we can
+				coordinate the release.
+			</p>
+		</div>
+	</section>
+</SiteLayout>
+

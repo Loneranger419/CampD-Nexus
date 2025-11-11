@@ -1,0 +1,208 @@
+
+
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+
+const navItems = [
+	{ href: '/wiki', label: 'Wiki' },
+	{ href: '/games', label: 'Games' },
+	{ href: '/blog', label: 'Blog' },
+	{ href: '/repos', label: 'Repositories' },
+];
+
+const tileEntries = await getCollection('tiles');
+const spotlightTiles = tileEntries
+	.sort((a, b) => a.data.order - b.data.order)
+	.slice(0, 3)
+	.map((entry) => entry.data);
+
+const wikiEntries = await getCollection('wiki');
+const featuredWiki = wikiEntries
+	.sort((a, b) => b.data.updated.getTime() - a.data.updated.getTime())
+	.slice(0, 2);
+
+const blogPosts = await getCollection('blog');
+const latestBlog = blogPosts
+	.sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
+	.slice(0, 1);
+
+const guides = await getCollection('guides');
+const featuredGuide = guides
+	.sort((a, b) => b.data.updated.getTime() - a.data.updated.getTime())
+	.slice(0, 1);
+
+const modLists = await getCollection('modLists');
+const latestModList = modLists.sort(
+	(a, b) => b.data.updated.getTime() - a.data.updated.getTime(),
+)[0];
+---
+---
+
+<SiteLayout
+	title="CampD Nexus"
+	description="CampD Nexus is the launchpad for our modded adventures, guides, and shared knowledge base."
+	navItems={navItems}
+>
+	<section class="fade-in flex flex-col items-center gap-8 text-center">
+		<span class="tag">CampD Collective</span>
+		<div class="space-y-4 text-balance">
+			<h1 class="prose-title text-4xl sm:text-5xl lg:text-6xl">
+				Everything you need for the next CampD session.
+			</h1>
+			<p class="prose-muted max-w-content-md mx-auto text-base sm:text-lg">
+				From curated mod lists to living wiki pages and blog updates, CampD Nexus keeps the squad in sync.
+				No guesswork—just plug in, boot up, and play.
+			</p>
+		</div>
+		<div class="flex flex-wrap items-center justify-center gap-3">
+			<a class="btn" href="/games">
+				View Mod Guides
+				<svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+					<path fill="currentColor" d="m13.6 5.2l5.6 5.6l-5.6 5.6l-1.2-1.2l3.4-3.4H6v-1.6h9.8L12.4 6.4z" />
+				</svg>
+			</a>
+			<a class="btn-secondary" href="/wiki">Browse the Wiki</a>
+		</div>
+	</section>
+
+	<section class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+		{spotlightTiles.map((tile) => (
+			<a class="card" href={tile.href}>
+				<div class="flex items-center justify-between">
+					<h2 class="text-lg font-semibold">{tile.title}</h2>
+					<span class="tag">{tile.tag}</span>
+				</div>
+				<p class="prose-muted mt-3 text-sm leading-relaxed">{tile.description}</p>
+				<span class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent">
+					Open
+					<svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+						<path fill="currentColor" d="m13.6 5.2l5.6 5.6l-5.6 5.6l-1.2-1.2l3.4-3.4H6v-1.6h9.8L12.4 6.4z" />
+					</svg>
+				</span>
+			</a>
+		))}
+	</section>
+
+	<section class="mt-20 grid gap-8 lg:grid-cols-[1.5fr_1fr]">
+		<div class="card space-y-6">
+			<div>
+				<h2 class="text-2xl font-semibold text-foreground">From the Wiki</h2>
+				<p class="prose-muted mt-2 text-sm leading-relaxed">
+					Operational notes and event prep guides that keep every CampD session aligned.
+				</p>
+			</div>
+			<ul class="space-y-4">
+				{featuredWiki.map((entry) => (
+					<li class="rounded-2xl border border-border/40 bg-surface/70 p-4 transition hover:border-accent/60">
+						<a class="flex flex-col gap-1" href={`/wiki/${entry.slug}`}>
+							<span class="text-sm font-semibold text-accent">
+								{entry.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+							</span>
+							<span class="text-lg font-semibold text-foreground">{entry.data.title}</span>
+							<p class="prose-muted text-sm">{entry.data.summary}</p>
+						</a>
+					</li>
+				))}
+			</ul>
+		</div>
+		<div class="card space-y-6">
+			<div class="space-y-2">
+				<h2 class="text-xl font-semibold text-foreground">Latest Signals</h2>
+				<p class="prose-muted text-sm leading-relaxed">
+					Keep an eye on what changed across the network this week.
+				</p>
+			</div>
+			{latestBlog.map((post) => (
+				<a class="block rounded-2xl border border-border/40 bg-surface/80 p-4 hover:border-accent/60" href={`/blog/${post.slug}`}>
+					<span class="text-xs font-semibold uppercase tracking-wide text-accent">Blog</span>
+					<h3 class="mt-1 text-lg font-semibold text-foreground">{post.data.title}</h3>
+					<p class="prose-muted mt-1 text-sm">{post.data.summary}</p>
+					<p class="mt-3 text-xs text-muted">
+						By {post.data.author} •{' '}
+						{post.data.published.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+					</p>
+				</a>
+			))}
+			{featuredGuide.map((guide) => (
+				<a class="block rounded-2xl border border-border/40 bg-surface/80 p-4 hover:border-accent/60" href={`/games/${guide.data.game.toLowerCase()}/guides/${guide.slug}`}>
+					<span class="text-xs font-semibold uppercase tracking-wide text-accent">Mod Guide</span>
+					<h3 class="mt-1 text-lg font-semibold text-foreground">{guide.data.title}</h3>
+					<p class="prose-muted mt-1 text-sm">{guide.data.summary}</p>
+					<p class="mt-3 text-xs text-muted">
+						Version {guide.data.version} • Updated{' '}
+						{guide.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+					</p>
+				</a>
+			))}
+			{latestModList && (
+				<div class="rounded-2xl border border-border/40 bg-surface/80 p-4">
+					<span class="text-xs font-semibold uppercase tracking-wide text-accent">Mod List</span>
+					<h3 class="mt-1 text-lg font-semibold text-foreground">{latestModList.data.game}</h3>
+					<p class="prose-muted mt-1 text-sm">
+						Last updated{' '}
+						{latestModList.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} • Version{' '}
+						{latestModList.data.version}
+					</p>
+					<ul class="mt-3 space-y-2 text-xs text-muted">
+						{latestModList.data.mods.slice(0, 2).map((mod) => (
+							<li class="flex items-center justify-between gap-3 rounded-xl border border-border/30 bg-background/70 px-3 py-2">
+								<span class="font-medium text-foreground">{mod.name}</span>
+								<span class="rounded-full bg-accent/10 px-2 py-0.5 text-[0.7rem] font-semibold uppercase tracking-wide text-accent">
+									{mod.category.replace(/-/g, ' ')}
+								</span>
+							</li>
+						))}
+					</ul>
+					<a class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-accent" href={`/games/${latestModList.data.game.toLowerCase()}`}>
+						View full list
+						<svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+							<path fill="currentColor" d="m13.6 5.2l5.6 5.6l-5.6 5.6l-1.2-1.2l3.4-3.4H6v-1.6h9.8L12.4 6.4z" />
+						</svg>
+					</a>
+				</div>
+			)}
+		</div>
+	</section>
+
+	<section class="mt-20 grid gap-8 lg:grid-cols-[1.25fr_1fr]">
+		<div class="card glass border-border/40 bg-surface/80">
+			<h2 class="text-2xl font-semibold text-foreground">Live-updated content, zero friction.</h2>
+			<p class="prose-muted mt-3 leading-relaxed">
+				Editors can update tiles, guides, and wiki entries through Decap CMS or standard pull requests. Every
+				change is reviewed, versioned, and deployed automatically to GitHub Pages.
+			</p>
+			<ul class="mt-6 space-y-3 text-sm text-muted">
+				<li class="flex items-start gap-3">
+					<span class="mt-1 h-2.5 w-2.5 rounded-full bg-accent/80"></span>
+					<span>Structured content folders keep every game and guide easy to navigate.</span>
+				</li>
+				<li class="flex items-start gap-3">
+					<span class="mt-1 h-2.5 w-2.5 rounded-full bg-accent/80"></span>
+					<span>Tailwind-powered components ensure consistent styling across the site.</span>
+				</li>
+				<li class="flex items-start gap-3">
+					<span class="mt-1 h-2.5 w-2.5 rounded-full bg-accent/80"></span>
+					<span>Pagefind search surfaces wiki answers instantly with no additional services.</span>
+				</li>
+			</ul>
+		</div>
+		<div class="card bg-gradient-to-br from-accent/15 via-surface to-surface/70">
+			<h3 class="text-lg font-semibold text-foreground">Upcoming Milestones</h3>
+			<ol class="mt-4 space-y-4 text-sm text-muted">
+				<li>
+					<span class="font-semibold text-foreground">Content scaffolding</span>
+					<p>Lay down the wiki, blog, and game directories in `content/` with seed data.</p>
+				</li>
+				<li>
+					<span class="font-semibold text-foreground">CMS wiring</span>
+					<p>Enable Decap collections mapped to every content type with custom previews.</p>
+				</li>
+				<li>
+					<span class="font-semibold text-foreground">Search launch</span>
+					<p>Generate the Pagefind index during CI builds and surface the search panel globally.</p>
+				</li>
+			</ol>
+		</div>
+	</section>
+</SiteLayout>

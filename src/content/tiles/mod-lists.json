@@ -1,0 +1,9 @@
+{
+  "title": "Active Mod Lists",
+  "description": "Browse curated mod lineups for every current CampD game night.",
+  "href": "/games",
+  "tag": "Mod Lists",
+  "icon": "tabler:hexagon-letter-m",
+  "order": 1
+}
+

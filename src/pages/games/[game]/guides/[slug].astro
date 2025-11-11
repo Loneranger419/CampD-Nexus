@@ -1,0 +1,51 @@
+---
+import SiteLayout from '../../../../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { slugify } from '../../../../utils/slugify';
+
+export async function getStaticPaths() {
+	const guides = await getCollection('guides');
+
+	return guides.map((guide) => ({
+		params: {
+			game: slugify(guide.data.game),
+			slug: guide.slug,
+		},
+		props: { guide },
+	}));
+}
+
+const { guide } = Astro.props as { guide: CollectionEntry<'guides'> };
+const { Content } = await guide.render();
+---
+
+<SiteLayout
+	title={guide.data.title}
+	description={guide.data.summary}
+>
+	<article class="prose prose-invert max-w-none dark:prose-invert">
+		<header class="mb-6 space-y-2">
+			<p class="text-sm text-muted">
+				Game: {guide.data.game} • Version {guide.data.version} • Updated{' '}
+				{guide.data.updated.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+			</p>
+			<h1 class="text-3xl font-semibold text-foreground">{guide.data.title}</h1>
+			{guide.data.tags.length > 0 && (
+				<ul class="flex flex-wrap gap-2 text-xs text-muted">
+					{guide.data.tags.map((tag) => (
+						<li class="rounded-full bg-accent/10 px-3 py-1 font-semibold uppercase tracking-wide text-accent">
+							{tag}
+						</li>
+					))}
+				</ul>
+			)}
+		</header>
+		<Content />
+	</article>
+	<footer class="mt-10 flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
+		<a class="btn-secondary" href={`/games/${Astro.params.game}`}>← Back to game hub</a>
+		<p>Guide still evolving? Submit PRs with testing notes or open a discussion in the CampD Discord.</p>
+	</footer>
+</SiteLayout>
+

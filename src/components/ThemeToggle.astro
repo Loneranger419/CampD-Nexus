@@ -1,0 +1,67 @@
+---
+const { id = 'theme-toggle' } = Astro.props;
+const storageKey = 'campd-theme';
+---
+
+<button
+	id={id}
+	class="btn-secondary relative h-10 w-10 justify-center rounded-full p-0 transition-transform duration-150"
+	type="button"
+	aria-label="Toggle color theme"
+	data-theme="light"
+>
+	<span class="sr-only">Toggle color theme</span>
+	<svg class="icon-sun h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+		<path
+			fill="currentColor"
+			d="M12 4.75a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 12 4.75Zm4.955 1.795a.75.75 0 0 1 1.06 0l.353.353a.75.75 0 0 1-1.06 1.06l-.353-.353a.75.75 0 0 1 0-1.06Zm-9.91 0a.75.75 0 0 1 0 1.06l-.353.353a.75.75 0 0 1-1.06-1.06l.353-.353a.75.75 0 0 1 1.06 0ZM12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7ZM4.75 11a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 4.75 11Zm12.25 0a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-9 6.25a.75.75 0 0 1 1.06 1.06l-.353.353a.75.75 0 0 1-1.06-1.06ZM18.25 15a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-1.5 0v-.5a.75.75 0 0 1 .75-.75Zm-6.25 2.25a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-1.5 0v-.5a.75.75 0 0 1 .75-.75Z"
+		/>
+	</svg>
+	<svg class="icon-moon absolute inset-0 m-auto hidden h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+		<path
+			fill="currentColor"
+			d="M21 12.79A8.5 8.5 0 0 1 11.21 3a.75.75 0 0 0-.86-.93A9.5 9.5 0 1 0 21.93 12.07a.75.75 0 0 0-.93-.86Z"
+		/>
+	</svg>
+</button>
+<script is:inline>
+	const storageKey = 'campd-theme';
+	const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
+	const getStoredTheme = () => localStorage.getItem(storageKey);
+
+	const getInitialTheme = () => {
+		const stored = getStoredTheme();
+		if (stored === 'light' || stored === 'dark') return stored;
+		return prefersDark() ? 'dark' : 'light';
+	};
+
+	const targetId = '${id}';
+	const button = document.getElementById(targetId);
+
+	const applyTheme = (theme) => {
+		if (!button) return;
+		document.documentElement.dataset.theme = theme;
+		button.dataset.theme = theme;
+		button.querySelector('.icon-sun')?.classList.toggle('hidden', theme === 'dark');
+		button.querySelector('.icon-moon')?.classList.toggle('hidden', theme === 'light');
+	};
+
+	if (button) {
+		let theme = getInitialTheme();
+		applyTheme(theme);
+
+		button.addEventListener('click', () => {
+			theme = theme === 'dark' ? 'light' : 'dark';
+			localStorage.setItem(storageKey, theme);
+			applyTheme(theme);
+		});
+
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+			if (!getStoredTheme()) {
+				theme = event.matches ? 'dark' : 'light';
+				applyTheme(theme);
+			}
+		});
+	}
+</script>
+

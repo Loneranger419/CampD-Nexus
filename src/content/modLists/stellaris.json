@@ -1,0 +1,42 @@
+{
+  "game": "Stellaris",
+  "version": "3.12",
+  "updated": "2025-10-18",
+  "maintainer": "CampD Tech Quartermasters",
+  "mods": [
+    {
+      "name": "CampD Core Patch",
+      "author": "CampD Collective",
+      "description": "Shared compatibility layer and checksum anchor for multiplayer sessions.",
+      "link": "https://example.com/mods/campd-core-patch",
+      "required": true,
+      "category": "core"
+    },
+    {
+      "name": "UI Overhaul Dynamic",
+      "author": "Updated Collection",
+      "description": "Enhances interface clarity for empire, fleet, and planet management.",
+      "link": "https://steamcommunity.com/sharedfiles/filedetails/?id=1623423360",
+      "required": true,
+      "category": "quality-of-life"
+    },
+    {
+      "name": "CampD Shipset Pack",
+      "description": "Optional cosmetics curated for the current Stellaris season.",
+      "link": "https://example.com/mods/campd-shipset-pack",
+      "required": false,
+      "category": "optional"
+    }
+  ],
+  "resources": [
+    {
+      "title": "CampD Stellaris Playset Checklist",
+      "url": "https://example.com/docs/stellaris-checklist"
+    },
+    {
+      "title": "Workshop Collection",
+      "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=123456"
+    }
+  ]
+}
+

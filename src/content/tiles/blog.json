@@ -1,0 +1,9 @@
+{
+  "title": "Latest Dispatches",
+  "description": "Catch up on community updates, patch highlights, and session recaps.",
+  "href": "/blog",
+  "tag": "Blog",
+  "icon": "tabler:news",
+  "order": 3
+}
+
