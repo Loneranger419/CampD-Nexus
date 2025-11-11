@@ -10,4 +10,5 @@
 - Added reminder in `README.md` to run npm commands from the project root (`Site2025`) before installing or building.
 - Blog detail routing updated to `src/pages/blog/[year]/[slug].astro` to support year-based directories in `src/content/blog/`.
 - `astro.config.mjs` now pins `site` and `base` to `https://loneranger419.github.io/CampD-Nexus/` so GitHub Pages serves the correct asset URLs; adjust if the hosting URL changes.
+- Pagefind search integration added: `npm run build` now runs Pagefind, `SearchWidget` exposes a Ctrl + K overlay, and `withBase()` helper keeps internal links base-aware.
 

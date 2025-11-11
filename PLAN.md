@@ -1,8 +1,8 @@
 ## Implementation Plan
 
-1. **Search Integration**
-   - Add Pagefind during build; configure Astro to emit the search index and embed client UI.
-   - Style the search trigger and results panel to match the tile aesthetic.
+1. **Search Integration** ✅
+   - Pagefind runs after every build via `npm run pagefind`, bundling assets under `/pagefind`.
+   - Header includes a styled search trigger (Ctrl + K) that opens the Pagefind UI overlay matching tile aesthetics.
 
 2. **CMS Enablement**
    - Configure Decap CMS: create `admin/` route, define collections for each content type, and set up GitHub OAuth app.

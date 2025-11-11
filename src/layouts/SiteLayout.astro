@@ -25,6 +25,7 @@ const { title = 'CampD Nexus', description = 'CampD hubs, guides, and community 
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.site?.href ?? 'https://example.com'} />
 		<link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+		<link rel="stylesheet" href={withBase('/pagefind/pagefind-ui.css')} />
 		<script is:inline>
 			(() => {
 				const storageKey = 'campd-theme';

@@ -34,7 +34,7 @@ The current content is seeded with representative placeholders so every navigati
 - **Styling & UI:** Tailwind CSS plus a small set of shadcn/ui-inspired components adapted for Astro; dark/light themes handled with CSS variables and the `@astrojs/tailwind` plugin.
 - **Content Storage:** Markdown for wiki, blog, and mod guides; JSON data files for tile metadata and mod lists, all versioned in `content/`.
 - **Editing Workflow:** GitHub pull requests as the primary contribution path; Decap CMS added for a friendlier editor that authenticates via GitHub and commits directly to the repo.
-- **Search:** Pagefind static index generated at build time to provide wiki-style search without external services.
+- **Search:** Pagefind static index generated at build time to provide wiki-style search without external services (press `Ctrl+K` to launch the overlay).
 - **Automation:** GitHub Actions to lint content, build Astro, and deploy to GitHub Pages on merge; scheduled workflow to rebuild search index if needed.
 - **Media Assets:** Store images in the repo where feasible; for larger assets, use Git LFS or a CDN-backed bucket referenced in Markdown.
 - **Extensibility:** If we later need dynamic features (live edits, user auth), we can bolt on a lightweight API (Cloudflare Workers/Supabase) while still serving the static site from GitHub Pages.
@@ -44,7 +44,8 @@ The current content is seeded with representative placeholders so every navigati
 - Change into the project directory: `cd Site2025`
 - Install dependencies: `npm install`
 - Development server: `npm run dev -- --open` (launches Astro on `http://localhost:4321`)
-- Build for production: `npm run build` (outputs static site to `dist/`)
+- Build for production: `npm run build` (outputs static site to `dist/` and bundles the Pagefind search assets)
+- Rebuild search index only: `npm run pagefind` (reruns Pagefind against the latest `dist/` output)
 - Preview production build: `npm run preview`
 - Deployment target: GitHub Pages via workflow pushing contents of `dist/`
 - Current wiki, blog, games, and repositories pages render seeded placeholders—swap the content files as collections expand.
